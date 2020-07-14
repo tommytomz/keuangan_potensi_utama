@@ -63,7 +63,7 @@ class PendapatanjasaController extends Controller
                     ->joinWith('jumlah')
                     ->joinWith('fakultas')
                     ->joinWith('jenispendapatan')
-                    ->select("sum(pendapatan.jumlah) as pendapatan_mahasiswa, sum(pendapatan.jumlah) / jumlah.jumlah_mahasiswa as nilai_akhir_mahasiswa")
+                    //->select("sum(pendapatan.jumlah) as pendapatan_mahasiswa, sum(pendapatan.jumlah) / jumlah.jumlah_mahasiswa as nilai_akhir_mahasiswa")
                     ->andFilterWhere(
                         [
                             'pendapatan.idtahunajaran'  => $_SESSION['idtahunajaran'],
@@ -78,7 +78,7 @@ class PendapatanjasaController extends Controller
                     ->joinWith('jumlah')
                     ->joinWith('fakultas')
                     ->joinWith('jenispendapatan')
-                    ->select('sum(pendapatan.jumlah) as pendapatan_dosen, sum(pendapatan.jumlah) / jumlah.jumlah_dosen as nilai_akhir_dosen')
+                    //->select('sum(pendapatan.jumlah) as pendapatan_dosen, sum(pendapatan.jumlah) / jumlah.jumlah_dosen as nilai_akhir_dosen')
                     ->andFilterWhere(
                         [
                             'pendapatan.idtahunajaran'  => $_SESSION['idtahunajaran'],
@@ -93,7 +93,7 @@ class PendapatanjasaController extends Controller
                     ->joinWith('jumlah')
                     ->joinWith('fakultas')
                     ->joinWith('jenispendapatan')
-                    ->select('sum(pendapatan.jumlah) as pendapatan_lain, sum(pendapatan.jumlah) / 1 as nilai_akhir_lain')
+                    // ->select('sum(pendapatan.jumlah) as pendapatan_lain, sum(pendapatan.jumlah) / 1 as nilai_akhir_lain')
                     ->andFilterWhere(
                         [
                             'pendapatan.idtahunajaran'  => $_SESSION['idtahunajaran'],
