@@ -13,12 +13,9 @@ nbproject
 Thumbs.db
 
 # composer vendor dir
-/vendor
+#/vendor
 /web/assets
-/web/uploads/foto_pengangkatan
-/web/uploads/surat_permohonan_pengangkatan
-/web/uploads/surat_pertimbangan
-/web/uploads/surat_tanda_tamat
+/config
 
 # composer itself is not needed
 composer.phar
