@@ -7,6 +7,7 @@
  * @version   3.3.4
  */
 
+
 namespace kartik\grid;
 
 use kartik\base\AssetBundle;
