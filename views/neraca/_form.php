@@ -6,7 +6,6 @@ use yii\helpers\ArrayHelper;
 use app\models\Akun;
 use app\models\SubAkun;
 use kartik\number\NumberControl;
-use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Transaksi */
@@ -83,21 +82,14 @@ $datasubakun    = ArrayHelper::map(SubAkun::find()->all(),'id','nama_sub_akun');
         </div>
     </div>
 
+    <?= $form->field($model, 'no_ref')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'nominal')->widget(NumberControl::classname(), []) ?>
 
     <?= $form->field($model, 'keterangan')->textarea(['rows' => 6]) ?>
 
-    <?=DatePicker::widget([
-        'model' => $model,
-        'attribute' => 'tanggal',
-        'value' => date('d-m-Y'),
-        'options' => ['placeholder' => 'Pilih Tanggal'],
-        'pluginOptions' => [
-            'format' => 'dd-mm-yyyy',
-            'autoclose' => true,
-            'todayHighlight' => true
-        ]
-    ])?>
+    <?= $form->field($model, 'tanggal')->textInput() ?>
+
   
 	<?php if (!Yii::$app->request->isAjax){ ?>
 	  	<div class="form-group">

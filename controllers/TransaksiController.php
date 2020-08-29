@@ -96,6 +96,7 @@ class TransaksiController extends Controller
     {
         $request = Yii::$app->request;
         $model = new Transaksi();  
+        $model->tanggal = date('d-m-Y');
 
         if($request->isAjax){
             /*
@@ -113,6 +114,36 @@ class TransaksiController extends Controller
         
                 ];         
             }else if($model->load($request->post())){
+                
+                if( empty($_POST['Transaksi']['idsubakun']) || 
+                    empty($_POST['Transaksi']['idsubakun2']) || 
+                    empty($_POST['Transaksi']['nominal']) || 
+                    empty($_POST['Transaksi']['tanggal'])
+                ){
+                    if(empty($_POST['Transaksi']['idsubakun']) || empty($_POST['Transaksi']['idsubakun2'])){
+                        $model->addError('idsubakun','Sub akun tidak boleh kosong');
+                        $model->addError('idsubakun2','Sub akun tidak boleh kosong');
+                    }
+
+                    if(empty($_POST['Transaksi']['idsubakun'])){
+                        $model->addError('nominal','Nominal tidak boleh kosong');
+                    }
+
+                    if(empty($_POST['Transaksi']['tanggal'])){
+                        $model->addError('tanggal','Nominal tidak boleh kosong');
+                    }
+                    
+                    return [
+                            'title'=> "Tambah Transaksi",
+                            'content'=>$this->renderAjax('create', [
+                                'model' => $model,
+                            ]),
+                            'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                        Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                
+                        ];
+                }
+
                 $berhasil = 0;
                 $transaction = Yii::$app->db->beginTransaction();
                 $noref = date('YmdHis');
@@ -125,7 +156,7 @@ class TransaksiController extends Controller
                     $model2->no_ref          = $noref;
                     $model2->kredit          = $_POST['Transaksi']['nominal'];
                     $model2->keterangan      = $_POST['Transaksi']['keterangan'];
-                    $model2->tanggal         = $_POST['Transaksi']['tanggal'];
+                    $model2->tanggal         = $this->convertTanggal($_POST['Transaksi']['tanggal']);
                     // $model2->tanggal         = date('Y-m-d');
                     if($model2->save()){
 
@@ -138,7 +169,7 @@ class TransaksiController extends Controller
                         $model2->debet           = $_POST['Transaksi']['nominal'];
                         $model2->keterangan      = $_POST['Transaksi']['keterangan'];
                         //$model->tanggal         = $_POST['Transaksi']['tanggal'];
-                        $model2->tanggal         = $_POST['Transaksi']['tanggal'];
+                        $model2->tanggal         = $this->convertTanggal($_POST['Transaksi']['tanggal']);
                         if($model2->save()){
                             $transaction->commit();
                             $berhasil = 1;
@@ -167,7 +198,7 @@ class TransaksiController extends Controller
                     $model2->no_ref          = $noref;
                     $model2->debet           = $_POST['Transaksi']['nominal'];
                     $model2->keterangan      = $_POST['Transaksi']['keterangan'];
-                    $model2->tanggal         = $_POST['Transaksi']['tanggal'];
+                    $model2->tanggal         = $this->convertTanggal($_POST['Transaksi']['tanggal']);
                     // $model2->tanggal         = date('Y-m-d');
                     if($model2->save()){
                         $model2 = new Transaksi();
@@ -177,7 +208,7 @@ class TransaksiController extends Controller
                         $model2->no_ref          = $noref;
                         $model2->kredit          = $_POST['Transaksi']['nominal'];
                         $model2->keterangan      = $_POST['Transaksi']['keterangan'];
-                        $model2->tanggal         = $_POST['Transaksi']['tanggal'];
+                        $model2->tanggal         = $this->convertTanggal($_POST['Transaksi']['tanggal']);
                         // $model2->tanggal         = date('Y-m-d');
                         if($model2->save()){
                             $transaction->commit();
@@ -301,7 +332,7 @@ class TransaksiController extends Controller
                     $modeltransaksi->no_ref          = $id;
                     $modeltransaksi->kredit          = str_replace(",", "", $_POST['w1-disp']);
                     $modeltransaksi->keterangan      = $_POST['Transaksi']['keterangan'];
-                    $modeltransaksi->tanggal         = $_POST['Transaksi']['tanggal'];
+                    $modeltransaksi->tanggal         = $this->convertTanggal($_POST['Transaksi']['tanggal']);
                     //$modeltransaksi->tanggal         = date('Y-m-d');
                     if($modeltransaksi->save()){
                         $modeltransaksi = new Transaksi();
@@ -312,7 +343,7 @@ class TransaksiController extends Controller
                         $modeltransaksi->no_ref          = $id;
                         $modeltransaksi->debet           = str_replace(",", "", $_POST['w1-disp']);
                         $modeltransaksi->keterangan      = $_POST['Transaksi']['keterangan'];
-                        $modeltransaksi->tanggal         = $_POST['Transaksi']['tanggal'];
+                        $modeltransaksi->tanggal         = $this->convertTanggal($_POST['Transaksi']['tanggal']);
                         //$modeltransaksi->tanggal         = date('Y-m-d');
                         if($modeltransaksi->save()){
                             $transaction->commit();
@@ -343,7 +374,7 @@ class TransaksiController extends Controller
                     $modeltransaksi->no_ref          = $id;
                     $modeltransaksi->debet           = str_replace(",", "", $_POST['w1-disp']);
                     $modeltransaksi->keterangan      = $_POST['Transaksi']['keterangan'];
-                    $modeltransaksi->tanggal         = $_POST['Transaksi']['tanggal'];
+                    $modeltransaksi->tanggal         = $this->convertTanggal($_POST['Transaksi']['tanggal']);
                     //$modeltransaksi->tanggal         = date('Y-m-d');
                     if($modeltransaksi->save()){
                         $modeltransaksi = new Transaksi();
@@ -352,7 +383,7 @@ class TransaksiController extends Controller
                         $modeltransaksi->no_ref          = $id;
                         $modeltransaksi->kredit          = str_replace(",", "", $_POST['w1-disp']);
                         $modeltransaksi->keterangan      = $_POST['Transaksi']['keterangan'];
-                        $modeltransaksi->tanggal         = $_POST['Transaksi']['tanggal'];
+                        $modeltransaksi->tanggal         = $this->convertTanggal($_POST['Transaksi']['tanggal']);
                         //$modeltransaksi->tanggal         = date('Y-m-d');
                         if($modeltransaksi->save()){
                             $transaction->commit();
@@ -524,5 +555,12 @@ class TransaksiController extends Controller
           echo Html::tag('option', $nama, array('value'=>$value));
         }
         
+    }
+
+    private function convertTanggal($tanggal){
+        $hasil='';
+        $data = explode("-", $tanggal);
+        $hasil = $data[2]."-".$data[1]."-".$data[0];
+        return $hasil;
     }
 }

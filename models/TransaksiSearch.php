@@ -426,4 +426,182 @@ class TransaksiSearch extends Transaksi
 
         return $dataProvider;
     }
+
+    public function searchNeraca($params)
+    {
+        if(isset($params['Transaksi']['tanggal_dari']) || isset($params['Transaksi']['tanggal_sampai'])){
+
+            $vtanggaldari   = explode('-', $params['Transaksi']['tanggal_dari']);
+            $vtanggalsampai = explode('-', $params['Transaksi']['tanggal_sampai']);
+
+            $tanggaldari    = $vtanggaldari[2]."-".$vtanggaldari[1]."-".$vtanggaldari[0];
+            $tanggalsampai  = $vtanggalsampai[2]."-".$vtanggalsampai[1]."-".$vtanggalsampai[0];
+        }
+
+        $query = "
+            select 
+                -- ak.nama_akun as kategori,
+                case 
+                    when ak.nama_akun = 'Harta' then 
+                        'Aktiva'
+                    when ak.nama_akun = 'Hutang' then 
+                        'Kewajiban'
+                    when ak.nama_akun = 'Modal' then 
+                        'Modal'
+                end as kategori,
+                neraca.*,
+                '' as total
+            from (
+            (
+            select 
+                            distinct
+                                            sa.idakun,
+                            sa.id,
+                            sa.nama_sub_akun AS nama_akun,
+                            if((
+                                select 
+                                    sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                from transaksi 
+                                where ke_akun = tr.ke_akun 
+                                and tanggal >= :tanggaldari
+                                and tanggal <= :tanggalsampai
+                            ) > 0, (select 
+                                        sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                        from transaksi 
+                                        where ke_akun = tr.ke_akun 
+                                        and tanggal >= :tanggaldari
+                                        and tanggal <= :tanggalsampai), null) as debet,
+                        if((
+                                select 
+                                    sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                from transaksi 
+                                where ke_akun = tr.ke_akun 
+                                and tanggal >= :tanggaldari
+                                and tanggal <= :tanggalsampai
+                            ) < 0, abs((select 
+                                        sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                        from transaksi 
+                                        where ke_akun = tr.ke_akun 
+                                        and tanggal >= :tanggaldari
+                                        and tanggal <= :tanggalsampai)), null) as kredit
+                                       
+                        from transaksi tr 
+                        inner join sub_akun sa on tr.ke_akun = sa.id
+                        where tanggal >= :tanggaldari
+                        and tanggal <= :tanggalsampai
+                                    and sa.idakun = 1 
+            )
+            union all
+            (
+            select 
+                            distinct
+                                            sa.idakun,
+                            sa.id,
+                            sa.nama_sub_akun AS nama_akun,
+                            if((
+                                select 
+                                    sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                from transaksi 
+                                where ke_akun = tr.ke_akun 
+                                and tanggal >= :tanggaldari
+                                and tanggal <= :tanggalsampai
+                            ) > 0, (select 
+                                        sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                        from transaksi 
+                                        where ke_akun = tr.ke_akun 
+                                        and tanggal >= :tanggaldari
+                                        and tanggal <= :tanggalsampai), null) as debet,
+                        if((
+                                select 
+                                    sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                from transaksi 
+                                where ke_akun = tr.ke_akun 
+                                and tanggal >= :tanggaldari
+                                and tanggal <= :tanggalsampai
+                            ) < 0, abs((select 
+                                        sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                        from transaksi 
+                                        where ke_akun = tr.ke_akun 
+                                        and tanggal >= :tanggaldari
+                                        and tanggal <= :tanggalsampai)), null) as kredit
+                                       
+                        from transaksi tr 
+                        inner join sub_akun sa on tr.ke_akun = sa.id
+                        where tanggal >= :tanggaldari
+                        and tanggal <= :tanggalsampai
+                                    and sa.idakun = 2
+            )
+                        union all 
+                        (
+            select 
+                            distinct
+                                            sa.idakun,
+                            sa.id,
+                            sa.nama_sub_akun AS nama_akun,
+                            if((
+                                select 
+                                    sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                from transaksi 
+                                where ke_akun = tr.ke_akun 
+                                and tanggal >= :tanggaldari
+                                and tanggal <= :tanggalsampai
+                            ) > 0, (select 
+                                        sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                        from transaksi 
+                                        where ke_akun = tr.ke_akun 
+                                        and tanggal >= :tanggaldari
+                                        and tanggal <= :tanggalsampai), null) as debet,
+                        if((
+                                select 
+                                    sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                from transaksi 
+                                where ke_akun = tr.ke_akun 
+                                and tanggal >= :tanggaldari
+                                and tanggal <= :tanggalsampai
+                            ) < 0, abs((select 
+                                        sum((ifnull(debet,0) - ifnull(kredit,0))) 
+                                        from transaksi 
+                                        where ke_akun = tr.ke_akun 
+                                        and tanggal >= :tanggaldari
+                                        and tanggal <= :tanggalsampai)), null) as kredit
+                                       
+                        from transaksi tr 
+                        inner join sub_akun sa on tr.ke_akun = sa.id
+                        where tanggal >= :tanggaldari
+                        and tanggal <= :tanggalsampai
+                                    and sa.idakun = 3
+            )
+            ) neraca 
+            inner join akun ak on neraca.idakun = ak.id
+
+
+        ";
+        if(!isset($params['Transaksi']['tanggal_dari']) || !isset($params['Transaksi']['tanggal_sampai'])){
+            $tanggaldari = '0000-00-00';
+            $tanggalsampai = '0000-00-00';
+        }
+        //$query = "select * from transaksi";
+
+        $dataProvider = new SqlDataProvider([
+                'sql' => $query,
+                'pagination' => false,
+                'params' => [
+                    ':tanggaldari'      => $tanggaldari,
+                    ':tanggalsampai'    => $tanggalsampai
+                ]
+            ]);
+
+        
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+
+        return $dataProvider;
+    }
 }
