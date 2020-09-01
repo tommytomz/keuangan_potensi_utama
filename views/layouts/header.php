@@ -56,6 +56,14 @@ $prodi=Prodi::find()->where(['id'=>Yii::$app->user->identity->idprodi])->one();
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             
+                            <div class="pull-left">
+                                <?= Html::a(
+                                    'Ganti Password',
+                                    ['/site/logout'],
+                                    ['data-method' => 'post', 'class' => 'btn btn-warning btn-flat']
+                                ) ?>
+                            </div>
+
                             <div class="pull-right">
                                 <?= Html::a(
                                     'Logout',

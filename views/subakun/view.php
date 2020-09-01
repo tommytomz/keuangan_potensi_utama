@@ -12,6 +12,7 @@ use yii\widgets\DetailView;
         'attributes' => [
             'akun.nama_akun',
             'kode_akun',
+            'kategoriakun.nama_kategori',
             'nama_sub_akun',
       //       [
 		    //     'attribute'=>'debet',

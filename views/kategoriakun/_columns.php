@@ -3,7 +3,6 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use app\models\Akun;
-use app\models\KategoriAkun;
 
 return [
     [
@@ -18,10 +17,9 @@ return [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'id',
     // ],
-
-    [   
+    [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute' => 'idakun',
+        'attribute'=>'idakun',
         'filter'=>ArrayHelper::map(Akun::find()->all(),'id','nama_akun'),
         'filterType' => GridView::FILTER_SELECT2,
         'filterWidgetOptions' => [
@@ -34,43 +32,10 @@ return [
         'value'=>'akun.nama_akun',
         'visible' => true,
     ],
-    [   
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute' => 'idkategoriakun',
-        'filter'=>ArrayHelper::map(KategoriAkun::find()->all(),'id','nama_kategori'),
-        'filterType' => GridView::FILTER_SELECT2,
-        'filterWidgetOptions' => [
-            'options' => ['placeholder' => 'Pilih'],
-            'pluginOptions' => [
-                'allowClear' => true,
-            ],
-        ],
-        'label'=>'Kategori Akun',
-        'value'=>'kategoriakun.nama_kategori',
-        'visible' => true,
-    ],
     [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'kode_akun',
+        'attribute'=>'nama_kategori',
     ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'nama_sub_akun',
-    ],
-    // [
-    //     'class'=>'\kartik\grid\DataColumn',
-    //     'attribute'=>'debet',
-    //     'format' => ['decimal', 0],
-    //     'contentOptions'=>['style'=>'text-align:right; font-weight:bold; color:green;'],
-    //     'hAlign' => 'right',
-    // ],
-    // [
-    //     'class'=>'\kartik\grid\DataColumn',
-    //     'attribute'=>'kredit',
-    //     'format' => ['decimal', 0],
-    //     'contentOptions'=>['style'=>'text-align:right; font-weight:bold; color:red;'],
-    //     'hAlign' => 'right',
-    // ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,

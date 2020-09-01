@@ -100,7 +100,7 @@ if(isset($_GET['Transaksi']['tanggal_dari'])){
             'responsive' => true,          
             'panel' => [
                 'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Daftar Laba Rugi',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> Daftar Neraca',
                 //'before'=>$before,
                 // 'after'=>BulkButtonWidget::widget([
                 //             'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Hapus Semua',

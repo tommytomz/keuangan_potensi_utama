@@ -458,6 +458,7 @@ class TransaksiSearch extends Transaksi
                                             sa.idakun,
                             sa.id,
                             sa.nama_sub_akun AS nama_akun,
+                            ka.nama_kategori,
                             if((
                                 select 
                                     sum((ifnull(debet,0) - ifnull(kredit,0))) 
@@ -487,6 +488,7 @@ class TransaksiSearch extends Transaksi
                                        
                         from transaksi tr 
                         inner join sub_akun sa on tr.ke_akun = sa.id
+                        left join kategori_akun ka on sa.idkategoriakun = ka.id
                         where tanggal >= :tanggaldari
                         and tanggal <= :tanggalsampai
                                     and sa.idakun = 1 
@@ -498,6 +500,7 @@ class TransaksiSearch extends Transaksi
                                             sa.idakun,
                             sa.id,
                             sa.nama_sub_akun AS nama_akun,
+                            ka.nama_kategori,
                             if((
                                 select 
                                     sum((ifnull(debet,0) - ifnull(kredit,0))) 
@@ -527,6 +530,7 @@ class TransaksiSearch extends Transaksi
                                        
                         from transaksi tr 
                         inner join sub_akun sa on tr.ke_akun = sa.id
+                        left join kategori_akun ka on sa.idkategoriakun = ka.id
                         where tanggal >= :tanggaldari
                         and tanggal <= :tanggalsampai
                                     and sa.idakun = 2
@@ -538,6 +542,7 @@ class TransaksiSearch extends Transaksi
                                             sa.idakun,
                             sa.id,
                             sa.nama_sub_akun AS nama_akun,
+                            ka.nama_kategori,
                             if((
                                 select 
                                     sum((ifnull(debet,0) - ifnull(kredit,0))) 
@@ -567,6 +572,7 @@ class TransaksiSearch extends Transaksi
                                        
                         from transaksi tr 
                         inner join sub_akun sa on tr.ke_akun = sa.id
+                        left join kategori_akun ka on sa.idkategoriakun = ka.id
                         where tanggal >= :tanggaldari
                         and tanggal <= :tanggalsampai
                                     and sa.idakun = 3

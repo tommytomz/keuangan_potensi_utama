@@ -98,7 +98,7 @@ $datasubakun    = ArrayHelper::map(SubAkun::find()->all(),'id','nama_sub_akun');
                     //'value' => date('d-m-Y'),
                     'options' => ['placeholder' => 'Pilih Tanggal'],
                     'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
+                        'format' => 'dd-mm-yyyy',
                         'autoclose' => true,
                         'todayHighlight' => true
                     ]

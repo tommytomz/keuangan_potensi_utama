@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\SubAkun;
+use app\models\KategoriAkun;
 
 /**
- * SubAkunSearch represents the model behind the search form about `app\models\SubAkun`.
+ * KategoriAkunSearch represents the model behind the search form about `app\models\KategoriAkun`.
  */
-class SubAkunSearch extends SubAkun
+class KategoriAkunSearch extends KategoriAkun
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class SubAkunSearch extends SubAkun
     public function rules()
     {
         return [
-            [['id', 'idakun', 'idkategoriakun', 'kode_akun'], 'integer'],
-            [['nama_sub_akun'], 'safe'],
+            [['id', 'idakun'], 'integer'],
+            [['nama_kategori'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class SubAkunSearch extends SubAkun
      */
     public function search($params)
     {
-        $query = SubAkun::find();
+        $query = KategoriAkun::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,11 +58,9 @@ class SubAkunSearch extends SubAkun
         $query->andFilterWhere([
             'id' => $this->id,
             'idakun' => $this->idakun,
-            'idkategoriakun' => $this->idkategoriakun,
-            'kode_akun' => $this->kode_akun,
         ]);
 
-        $query->andFilterWhere(['like', 'nama_sub_akun', $this->nama_sub_akun]);
+        $query->andFilterWhere(['like', 'nama_kategori', $this->nama_kategori]);
 
         return $dataProvider;
     }

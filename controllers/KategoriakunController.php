@@ -3,21 +3,18 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\SubAkun;
-use app\models\SubAkunSearch;
+use app\models\KategoriAkun;
+use app\models\KategoriAkunSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
-use app\models\Akun;
-use app\models\KategoriAkun;
-use yii\helpers\ArrayHelper;
 
 /**
- * SubakunController implements the CRUD actions for SubAkun model.
+ * KategoriakunController implements the CRUD actions for KategoriAkun model.
  */
-class SubakunController extends Controller
+class KategoriakunController extends Controller
 {
     /**
      * @inheritdoc
@@ -36,12 +33,12 @@ class SubakunController extends Controller
     }
 
     /**
-     * Lists all SubAkun models.
+     * Lists all KategoriAkun models.
      * @return mixed
      */
     public function actionIndex()
     {    
-        $searchModel = new SubAkunSearch();
+        $searchModel = new KategoriAkunSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -52,7 +49,7 @@ class SubakunController extends Controller
 
 
     /**
-     * Displays a single SubAkun model.
+     * Displays a single KategoriAkun model.
      * @param integer $id
      * @return mixed
      */
@@ -62,7 +59,7 @@ class SubakunController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "Detail SubAkun",
+                    'title'=> "Detail Kategori Akun",
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
@@ -77,7 +74,7 @@ class SubakunController extends Controller
     }
 
     /**
-     * Creates a new SubAkun model.
+     * Creates a new KategoriAkun model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -85,17 +82,16 @@ class SubakunController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new SubAkun();  
+        $model = new KategoriAkun();  
 
         if($request->isAjax){
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-
             if($request->isGet){
                 return [
-                    'title'=> "Tambah Sub Akun",
+                    'title'=> "Tambah Kategori Akun",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -103,43 +99,23 @@ class SubakunController extends Controller
                                 Html::button('Simpan',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
-            }else if($model->load($request->post())){
-                $dataakun = Akun::find()
-                ->select('nilai')
-                ->where(['id'=>$_POST['SubAkun']['idakun']])
-                ->asArray()
-                ->one();
-
-                $model->kode_akun = $_POST['SubAkun']['idakun'].str_pad($dataakun['nilai'],3,"0", STR_PAD_LEFT);
-                if($model->save()){
-                    return [
-                        'forceReload'=>'#crud-datatable-pjax',
-                        'title'=> "Tambah Sub Akun",
-                        'content'=>'<span class="text-success">Tambah Sub Akun Sukses</span>',
-                        'footer'=> Html::button('Tutup',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::a('Tambah Lagi',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
-            
-                    ];  
-                }else{
-                    return [
-                        'title'=> "Tambah Sub Akun",
-                        'content'=>$this->renderAjax('create', [
-                            'model' => $model,
-                        ]),
-                        'footer'=> Html::button('Tutup',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                    Html::button('Simpan',['class'=>'btn btn-primary','type'=>"submit"])
-            
-                    ];  
-                }
-                       
+            }else if($model->load($request->post()) && $model->save()){
+                return [
+                    'forceReload'=>'#crud-datatable-pjax',
+                    'title'=> "Tambah Kategori Akun",
+                    'content'=>'<span class="text-success">Tambah Kategori Akun Sukses</span>',
+                    'footer'=> Html::button('Tutup',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Tambah Lagi',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
+        
+                ];         
             }else{           
                 return [
-                    'title'=> "Tambah Sub Akun",
+                    'title'=> "Tambah Kategori Akun",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Tutup',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Simpan',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }
@@ -159,7 +135,7 @@ class SubakunController extends Controller
     }
 
     /**
-     * Updates an existing SubAkun model.
+     * Updates an existing KategoriAkun model.
      * For ajax request will return json object
      * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -177,7 +153,7 @@ class SubakunController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Ubah Sub Akun",
+                    'title'=> "Ubah Kategori Akun",
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -187,7 +163,7 @@ class SubakunController extends Controller
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Sub Akun",
+                    'title'=> "Kategori Akun",
                     'content'=>$this->renderAjax('view', [
                         'model' => $model,
                     ]),
@@ -196,7 +172,7 @@ class SubakunController extends Controller
                 ];    
             }else{
                  return [
-                    'title'=> "Ubah Sub Akun",
+                    'title'=> "Ubah Kategori Akun",
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -219,7 +195,7 @@ class SubakunController extends Controller
     }
 
     /**
-     * Delete an existing SubAkun model.
+     * Delete an existing KategoriAkun model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -247,7 +223,7 @@ class SubakunController extends Controller
     }
 
      /**
-     * Delete multiple existing SubAkun model.
+     * Delete multiple existing KategoriAkun model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -278,31 +254,18 @@ class SubakunController extends Controller
     }
 
     /**
-     * Finds the SubAkun model based on its primary key value.
+     * Finds the KategoriAkun model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return SubAkun the loaded model
+     * @return KategoriAkun the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = SubAkun::findOne($id)) !== null) {
+        if (($model = KategoriAkun::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-
-    public function actionPilihkategoriakun($idakun)
-    {
-        $list = KategoriAkun::find()->where(['idakun'=>$idakun])->orderBy('nama_kategori')->all();
-        $data = ArrayHelper::map($list,'id','nama_kategori');
-        //print_r($data);
-        echo Html::tag('option','Pilih', array('value'=>''));
-       
-        foreach($data as $value=>$nama){
-          echo Html::tag('option', $nama, array('value'=>$value));
-        }
-        
     }
 }
