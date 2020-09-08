@@ -317,7 +317,8 @@ class TransaksiSearch extends Transaksi
             (
             select 
                             distinct
-                                            sa.idakun,
+                            sa.idakun,
+                            ka.nama_kategori,
                             sa.id,
                             sa.nama_sub_akun AS nama_akun,
                             if((
@@ -349,6 +350,7 @@ class TransaksiSearch extends Transaksi
                                        
                         from transaksi tr 
                         inner join sub_akun sa on tr.ke_akun = sa.id
+                        left join kategori_akun ka on sa.idkategoriakun = ka.id
                         where tanggal >= :tanggaldari
                         and tanggal <= :tanggalsampai
                                     and sa.idakun = 4 
@@ -357,7 +359,8 @@ class TransaksiSearch extends Transaksi
             (
             select 
                             distinct
-                                            sa.idakun,
+                            sa.idakun,
+                            ka.nama_kategori,
                             sa.id,
                             sa.nama_sub_akun AS nama_akun,
                             if((
@@ -389,6 +392,7 @@ class TransaksiSearch extends Transaksi
                                        
                         from transaksi tr 
                         inner join sub_akun sa on tr.ke_akun = sa.id
+                        left join kategori_akun ka on sa.idkategoriakun = ka.id
                         where tanggal >= :tanggaldari
                         and tanggal <= :tanggalsampai
                                     and sa.idakun = 5

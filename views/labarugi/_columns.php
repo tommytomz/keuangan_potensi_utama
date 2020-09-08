@@ -4,7 +4,7 @@ use yii\helpers\ArrayHelper;
 use app\models\SubAkun;
 use kartik\grid\GridView;
 use app\models\Transaksi;
-$totalkredit =0;
+// $totalkredit =0;
 return [
     // [
     //     'class' => 'kartik\grid\CheckboxColumn',
@@ -14,9 +14,10 @@ return [
     [
         'class' => 'kartik\grid\SerialColumn',
         'width' => '30px',
-        //'pageSummary' => 'Laba : ('.number_format(Transaksi::getTotal($dataProvider->models, 'kredit')).' - '.number_format(Transaksi::getTotal($dataProvider->models, 'debet')).''.')',
+        // 'pageSummary' => 'Laba : ('.number_format(Transaksi::getTotal($dataProvider->models, 'kredit')).' - '.number_format(Transaksi::getTotal($dataProvider->models, 'debet')).''.')',
         'pageSummary' => 'Laba = Pendapatan - Beban/Biaya',
-        'pageSummaryOptions' => ['colspan' => 2]
+        'pageSummaryOptions' => ['colspan' => 2],
+
     ],
         // [
         // 'class'=>'\kartik\grid\DataColumn',
@@ -42,9 +43,10 @@ return [
     //         'groupOddCssClass' => 'kv-grouped-row',  // configure odd group cell css class
     //         'groupEvenCssClass' => 'kv-grouped-row',
     // ],
+    
     [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'kategori',
+        'attribute' => 'kategori',
         'group' => true,
         'groupedRow' => true,                    // move grouped column to a single grouped row
         'groupOddCssClass' => 'kv-grouped-row',  // configure odd group cell css class
@@ -52,25 +54,25 @@ return [
         'groupFooter' => function ($model, $key, $index, $widget) { 
             //$p = compact('model', 'key', 'index');
             return [
-                'mergeColumns' => [[0,2]], // columns to merge in summary
+                'mergeColumns' => [[0,3]], // columns to merge in summary
                 'content' => [             // content to show in each summary cell
                     2 => 'Total : ',
                     //5 => GridView::F_AVG,
-                    3 => GridView::F_SUM,
                     4 => GridView::F_SUM,
+                    5 => GridView::F_SUM,
                     //5 => Pembayaran::getTotal($model, 'total'),
                 ],
                 'contentFormats' => [      // content reformatting for each summary cell
                     //6 => ['format' => 'number', 'decimals' => 2],
-                    3 => ['format' => 'number', 'decimals' => 0],
                     4 => ['format' => 'number', 'decimals' => 0],
+                    5 => ['format' => 'number', 'decimals' => 0],
                     // 6 => ['format' => 'number', 'decimals' => 2],
                 ],
                 'contentOptions' => [      // content html attributes for each summary cell
                     // 1 => ['style' => 'font-variant:small-caps'],
-                    0 => ['style' => 'text-align:right'],
-                    3 => ['style' => 'text-align:right'],
+                    0 => ['style' => 'text-align:left'],
                     4 => ['style' => 'text-align:right'],
+                    5 => ['style' => 'text-align:right'],
                     //6 => ['style' => 'text-align:right'],
                 ],
                 // html attributes for group summary row
@@ -79,21 +81,50 @@ return [
 
 
         },
+        
+        
+        'footerOptions' => ['class' => 'grid-footer', 'colspan' => 2],
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'nama_kategori',
+        'group' => true,
+        // 'label' => '',
+        'contentOptions'=>['style'=>'vertical-align:middle;'],
+        'value' => function ($model) {
+            // print_r($model['debet']);
+            if($model['nama_kategori']==""){
+                return "-";
+            }else{
+                return $model['nama_kategori'];
+            }
+        },
         //'footerOptions' => ['class' => 'grid-footer', 'colspan' => 2],
     ],
+
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute' => 'nama_akun',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
-        //'header' => ' ',
+        // 'label'=>'',
         'attribute'=>'debet',
+        // 'value' => function ($model) {
+        //     // print_r($model['debet']);
+        //     if($model['debet']=="0"){
+        //         return "";
+        //     }else{
+        //         return $model['debet'];
+        //     }
+           
+        // },
         'format' => ['decimal', 0],
         'contentOptions'=>['style'=>'text-align:right; font-weight:bold; color:green;'],
         'hAlign' => 'right',
         'pageSummary' => true,
         'pageSummaryOptions' => ['style' => 'font-weight:bold; color:green;']
+
         // 'pageSummary' => number_format(Transaksi::getTotal($dataProvider->models, 'debet')),
         // 'hAlign' => 'right', 
         //'footer' => ,
@@ -101,20 +132,25 @@ return [
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
+        // 'label'=>'',
         'attribute'=>'kredit',
         'format' => ['decimal', 0],
         'contentOptions'=>['style'=>'text-align:right; font-weight:bold; color:red;'],
         'hAlign' => 'right',
         'pageSummary' => true,
-        'pageSummaryOptions' => ['style' => 'font-weight:bold; color:red;']
+        'pageSummaryOptions' => ['style' => 'font-weight:bold; color:red;'],
         //'pageSummary' => number_format(Transaksi::getTotal($dataProvider->models, 'kredit') - Transaksi::getTotal($dataProvider->models, 'debet')),
+       
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'total',
+        // 'label'=>'',
        // 'format' => ['decimal', 0],
         'hAlign' => 'right',
+        'pageSummary' => true,
         'pageSummary' => number_format(Transaksi::getTotal($dataProvider->models, 'debet') - Transaksi::getTotal($dataProvider->models, 'kredit')),
     ],
+   
 
 ];   
